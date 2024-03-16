@@ -12,8 +12,8 @@ class TestScript(unittest.TestCase):
         # Create a temporary CSV file
         self.temp_csv_file = os.path.join(self.temp_dir.name, 'test.csv')
         with open(self.temp_csv_file, 'w') as file:
-            file.write("""2024-03-15 10:00:00,1234567890,0987654321,completed,60,recording1.wav
-2024-03-15 10:05:00,0987654321,1234567890,completed,45,recording2.wav
+            file.write("""2024-03-15 10:00:00,1234567890,0987654321,completed,60,test1
+2024-03-15 10:05:00,0987654321,1234567890,completed,45,test2
 """)
 
         # Create two mock recording files
