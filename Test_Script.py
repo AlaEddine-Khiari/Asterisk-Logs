@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import os
 
 # Import functions from your script
-from script import (
+from Script import (
     connect_to_postgres,
     insert_cdr,
     read_binary_data,
