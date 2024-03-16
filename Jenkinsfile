@@ -15,7 +15,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh "mkdir -p /app/asterisk/recordings"
                     sh "dd if=/dev/urandom of=/app/asterisk/recordings/test.wav bs=1024 count=1024"
                     sh "dd if=/dev/urandom of=/app/asterisk/recordings/test2.wav bs=1024 count=1024"
                     sh "python3 -m unittest Test_Script.py"
@@ -45,7 +44,7 @@ pipeline {
         stage('Cleanup Up') {
             steps {
                 Script{
-                    sh "rm -d /app/asterisk/recordings"
+                    sh "rm -r /app/asterisk/recordings/*"
                 }
                 cleanWs()  
             }
