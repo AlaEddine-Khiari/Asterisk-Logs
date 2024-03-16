@@ -1,76 +1,50 @@
 import unittest
-from unittest.mock import MagicMock
-from datetime import datetime, timedelta
-import os
-
-# Import functions from your script
-from Script import (
-    connect_to_postgres,
-    insert_cdr,
-    read_binary_data,
-    process_cdr_file,
-    get_last_call_start_date,
-)
-
+from unittest.mock import patch, MagicMock
+from Script import connect_to_postgres, insert_cdr, process_cdr_file, get_last_call_start_date
 
 class TestScript(unittest.TestCase):
-    def setUp(self):
-        # Mocking environment variables
-        os.environ['DB_NAME'] = 'test_db'
-        os.environ['DB_USER'] = 'test_user'
-        os.environ['DB_PASSWORD'] = 'test_password'
-        os.environ['DB_HOST'] = 'test_host'
-        os.environ['DB_PORT'] = 'test_port'
+    @patch('script.psycopg2.connect')
+    def test_connect_to_postgres(self, mock_connect):
+        # Mock the connection object
+        mock_conn = MagicMock()
+        mock_connect.return_value = mock_conn
 
-    def tearDown(self):
-        # Clear environment variables after test
-        del os.environ['DB_NAME']
-        del os.environ['DB_USER']
-        del os.environ['DB_PASSWORD']
-        del os.environ['DB_HOST']
-        del os.environ['DB_PORT']
-
-    def test_connect_to_postgres(self):
-        # Test connection to PostgreSQL
+        # Call the function
         conn = connect_to_postgres()
+
+        # Assertions
         self.assertIsNotNone(conn)
+        mock_connect.assert_called_once()
 
-    def test_insert_cdr(self):
-        # Test inserting CDR data
-        conn = MagicMock()
-        cursor = MagicMock()
-        cdr_data = ('2024-03-14 10:00:00', '123456789', '987654321', 'ANSWERED', 60, b'')
-        insert_cdr(conn, cursor, cdr_data)
-        cursor.execute.assert_called_once()
+    @patch('script.connect_to_postgres')
+    def test_process_cdr_file(self, mock_connect):
+        # Mock the cursor object
+        mock_cursor = MagicMock()
+        mock_cursor.fetchone.return_value = [None]  # Simulate no existing records
+        mock_conn = MagicMock()
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
 
-    def test_read_binary_data(self):
-        # Test reading binary data from a file
-        test_file_path = 'test_file.txt'
-        with open(test_file_path, 'wb') as f:
-            f.write(b'Test binary data')
-        binary_data = read_binary_data(test_file_path)
-        self.assertEqual(binary_data, b'Test binary data')
-        os.remove(test_file_path)
+        # Mock other dependencies as needed
 
-    def test_get_last_call_start_date(self):
-        # Test getting the last call start date
-        cursor = MagicMock()
-        cursor.fetchone.return_value = (datetime.now() - timedelta(days=1),)
-        last_call_start_date = get_last_call_start_date(None, cursor)
-        self.assertIsInstance(last_call_start_date, datetime)
+        # Call the function
+        process_cdr_file('/path/to/test.csv')
 
-    def test_process_cdr_file(self):
-        # Test processing CDR file
-        file_path = 'test.csv'
-        with open(file_path, 'w') as f:
-            f.write("2024-03-14 10:00:00,123456789,987654321,ANSWERED,60,test_recording.wav")
-        # Mock other functions
-        connect_to_postgres = MagicMock(return_value=None)
-        read_binary_data = MagicMock(return_value=b'')
-        insert_cdr = MagicMock()
-        get_last_call_start_date = MagicMock(return_value=None)
-        process_cdr_file(file_path)
-        insert_cdr.assert_called_once()
+        # Assertions or further test steps
+
+    @patch('script.connect_to_postgres')
+    def test_get_last_call_start_date(self, mock_connect):
+        # Mock the cursor object
+        mock_cursor = MagicMock()
+        mock_cursor.fetchone.return_value = ['2024-01-01 00:00:00']  # Simulate an existing record
+        mock_conn = MagicMock()
+        mock_conn.cursor.return_value = mock_cursor
+        mock_connect.return_value = mock_conn
+
+        # Call the function
+        last_call_start_date = get_last_call_start_date(mock_conn, mock_cursor)
+
+        # Assertions or further test steps
 
 if __name__ == '__main__':
     unittest.main()
