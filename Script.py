@@ -22,7 +22,7 @@ def connect_to_postgres():
 def insert_cdr(conn, cursor, cdr_data):
     try:
         cursor.execute("""
-            INSERT INTO your_table_name (timestamp, source, destination, status, duration, call_recording)
+            INSERT INTO cdr_log (timestamp, source, destination, status, duration, call_recording)
             VALUES (%s, %s, %s, %s, %s, %s)
         """, cdr_data)
         conn.commit()
@@ -47,7 +47,7 @@ def process_cdr_file(file_path):
                 # Assuming the structure of CSV file: timestamp, source, destination, status, duration, recording_file_name
                 timestamp, source, destination, status, duration, recording_file_name = row
                 # Construct the full file path
-                recording_file_path = os.path.join('/app/asterisk/recordings', recording_file_name+'.wav')
+                recording_file_path = os.path.join('/app/recordings', recording_file_name+'.wav')
                 # Read binary data from the file
                 call_recording_data = read_binary_data(recording_file_path)
                 cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
