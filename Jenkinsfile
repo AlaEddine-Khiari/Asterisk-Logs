@@ -43,7 +43,7 @@ pipeline {
         
         stage('Cleanup Up') {
             steps {
-                Script{
+                script {
                     sh "rm -r /app/asterisk/recordings/*"
                 }
                 cleanWs()  
