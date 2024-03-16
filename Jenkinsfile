@@ -15,6 +15,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    sh "mkdir /app/asterisk/recordings/
                     sh "python3 -m unittest Test_Script.py"
                 }
             }
@@ -41,6 +42,9 @@ pipeline {
         
         stage('Cleanup Up') {
             steps {
+                Script{
+                    sh "rm -d /app/asterisk/recordings"
+                }
                 cleanWs()  
             }
         }
