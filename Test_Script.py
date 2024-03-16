@@ -13,6 +13,13 @@ class TestScript(unittest.TestCase):
             file.write("""2024-03-15 10:00:00,1234567890,0987654321,completed,60,recording1.wav
 2024-03-15 10:05:00,0987654321,1234567890,completed,45,recording2
 """)
+    # Create two mock recording files
+    recording1_path = os.path.join(self.temp_dir.name, 'recording1.wav')
+    recording2_path = os.path.join(self.temp_dir.name, 'recording2.wav')
+    with open(recording1_path, 'wb') as file:
+        file.write(b'Mock recording 1 data')
+    with open(recording2_path, 'wb') as file:
+        file.write(b'Mock recording 2 data')
 
     def tearDown(self):
         # Delete the temporary directory and its contents
