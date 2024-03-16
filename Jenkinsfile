@@ -15,7 +15,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    sh "mkdir /app/asterisk/recordings/"
+                    sh "mkdir /app/asterisk/recordings"
                     sh "dd if=/dev/urandom of=/app/asterisk/recordings/test.wav bs=1024 count=1024"
                     sh "dd if=/dev/urandom of=/app/asterisk/recordings/test2.wav bs=1024 count=1024"
                     sh "python3 -m unittest Test_Script.py"
