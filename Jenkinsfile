@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t alaeddinekh/Asterisk-logs:latest ."
+                    sh "docker build -t alaeddinekh/asterisk-logs:latest ."
                 }
             }
         }
@@ -33,7 +33,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker_id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
-                        sh 'docker push alaeddinekh/Asterisk-logs:latest'
+                        sh 'docker push alaeddinekh/asterisk-logs:latest'
                     }
                 }
             }
