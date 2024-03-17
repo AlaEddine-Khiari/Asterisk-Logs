@@ -52,7 +52,9 @@ def process_cdr_file(file_path):
                 else:
                     # Convert duration to minutes and seconds format
                     duration = str(timedelta(seconds=int(duration)))
+                    call_recording_data = read_binary_data(recording_file_path)
                 # Check if call_start date is after the last recorded call_start date
+                last_call_start_date = get_last_call_start_date(conn, cursor)
                 call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
                 if (last_call_start_date is None or call_start_date > last_call_start_date) and (recording_file_name != last_one):    
                     # Insert Data Into Data Base
@@ -62,6 +64,17 @@ def process_cdr_file(file_path):
                 # Delete the call recording file
                 os.remove(recording_file_path)
         conn.close()
+
+# Function to get the last recorded call_start date from PostgreSQL
+def get_last_call_start_date(conn, cursor):
+    cursor.execute("SELECT MAX(timestamp) FROM cdr_log")
+    last_call_start_date = cursor.fetchone()[0]
+    return last_call_start_date
+
+# Function to read binary data from a file
+def read_binary_data(file_path):
+    with open(file_path, 'rb') as file:
+        return file.read()
 
 # Run the script
 if __name__ == "__main__":
