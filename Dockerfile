@@ -11,7 +11,7 @@ RUN mkdir -p /ext/recordings
 RUN chmod 777 /ext/recordings  
 
 # Copy your Python script into the container
-COPY script.py /app/
+COPY app.py /app/
 
 # Create a virtual environment
 RUN python3 -m venv /venv
@@ -21,7 +21,10 @@ ENV PATH="/venv/bin:$PATH"
 RUN /venv/bin/pip install --upgrade pip
 
 # Install psycopg2-binary within the virtual environment
-RUN /venv/bin/pip install psycopg2-binary
+RUN /venv/bin/pip install Flask psycopg2-binary
+
+# Expose port 5000
+EXPOSE 4000
 
 # Run the Python script
-CMD ["/venv/bin/python3", "script.py"]
+CMD ["/venv/bin/python3", "app.py"]
