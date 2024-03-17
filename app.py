@@ -5,6 +5,8 @@ import os
 import time
 from datetime import datetime, timedelta
 
+app = Flask(__name__)
+
 # Function to connect to PostgreSQL
 def connect_to_postgres():
     try:
