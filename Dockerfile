@@ -13,4 +13,4 @@ COPY script.py /app/
 RUN pip3 install psycopg2-binary
 
 # Run the Python script
-CMD ["python3", "Script.py"]
+CMD ["python3", "script.py"]
