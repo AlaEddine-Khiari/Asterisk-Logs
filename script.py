@@ -76,7 +76,12 @@ def read_binary_data(file_path):
     with open(file_path, 'rb') as file:
         return file.read()
 
-# Run the script
+# Run the script in a loop
 if __name__ == "__main__":
-    file_path = "/ext/Simple.csv"
-    process_cdr_file(file_path)
+    while True:
+        try:
+            file_path = "/ext/Simple.csv"
+            process_cdr_file(file_path)
+        except Exception as e:
+            print("An error occurred:", e)
+        time.sleep(60)
