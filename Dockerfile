@@ -1,7 +1,7 @@
 FROM alpine:latest
 
 # Install Python and necessary packages
-RUN apk del --purge $(apk info | grep -v '^python3' | grep -v '^musl' | grep -v '^apk-tools' | grep -v '^busybox' | cut -d' ' -f1)
+RUN apk del --purge
 RUN apk add --no-cache python3 python3-dev py3-pip postgresql-libs
 
 # Set working directory
