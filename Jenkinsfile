@@ -43,9 +43,6 @@ pipeline {
         
         stage('Cleanup Up') {
             steps {
-                script {
-                    sh "rm -r /app/recordings/*"
-                }
                 cleanWs()  
             }
         }
