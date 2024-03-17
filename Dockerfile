@@ -9,8 +9,15 @@ WORKDIR /app
 # Copy your Python script into the container
 COPY script.py /app/
 
-# Install dependencies
-RUN pip3 install psycopg2-binary
+# Create a virtual environment
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+
+# Upgrade pip in the virtual environment
+RUN /venv/bin/pip install --upgrade pip
+
+# Install psycopg2-binary within the virtual environment
+RUN /venv/bin/pip install psycopg2-binary
 
 # Run the Python script
-CMD ["python3", "script.py"]
+CMD ["/venv/bin/python3", "script.py"]
