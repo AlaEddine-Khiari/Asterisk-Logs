@@ -6,6 +6,10 @@ RUN apk add --no-cache python3 python3-dev py3-pip postgresql-libs
 # Set working directory
 WORKDIR /app
 
+# Create the recordings directory
+RUN mkdir -p /ext/recordings
+RUN chmod 777 /ext/recordings  
+
 # Copy your Python script into the container
 COPY script.py /app/
 
