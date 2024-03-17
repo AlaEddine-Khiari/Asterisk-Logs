@@ -24,7 +24,7 @@ RUN /venv/bin/pip install --upgrade pip
 # Install psycopg2-binary within the virtual environment
 RUN /venv/bin/pip install Flask psycopg2-binary
 
-# Expose port 5000
+# Expose port 4000
 EXPOSE 4000
 
 # Run the Python script
