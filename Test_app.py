@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 import tempfile
 import os
-from script import connect_to_postgres, insert_cdr, process_cdr_file, get_last_call_start_date
+from app import connect_to_postgres, insert_cdr, process_cdr_file, get_last_call_start_date
 
 class TestScript(unittest.TestCase):
     def setUp(self):
@@ -20,7 +20,7 @@ class TestScript(unittest.TestCase):
         # Delete the temporary directory and its contents
         self.temp_dir.cleanup()
 
-    @patch('script.psycopg2.connect')
+    @patch('app.psycopg2.connect')
     def test_connect_to_postgres(self, mock_connect):
         # Mock the connection object
         mock_conn = MagicMock()
@@ -33,7 +33,7 @@ class TestScript(unittest.TestCase):
         self.assertIsNotNone(conn)
         mock_connect.assert_called_once()
 
-    @patch('script.connect_to_postgres')
+    @patch('app.connect_to_postgres')
     def test_process_cdr_file(self, mock_connect):
         # Mock the cursor object
         mock_cursor = MagicMock()
@@ -47,7 +47,7 @@ class TestScript(unittest.TestCase):
 
         # Assertions or further test steps
 
-    @patch('script.connect_to_postgres')
+    @patch('app.connect_to_postgres')
     def test_get_last_call_start_date(self, mock_connect):
         # Mock the cursor object
         mock_cursor = MagicMock()
