@@ -1,6 +1,7 @@
 import csv
 import psycopg2
 import os
+import time
 from datetime import datetime, timedelta
 
 # Function to connect to PostgreSQL
