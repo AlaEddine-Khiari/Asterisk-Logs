@@ -1,3 +1,4 @@
+from flask import Flask
 import csv
 import psycopg2
 import os
@@ -78,11 +79,14 @@ def read_binary_data(file_path):
         return file.read()
 
 # Run the script in a loop
-if __name__ == "__main__":
-    while True:
-        try:
-            file_path = "/ext/Simple.csv"
-            process_cdr_file(file_path)
-        except Exception as e:
-            print("An error occurred:", e)
-        time.sleep(60)
+@app.route('/apply', methods=['GET'])
+def apply_changes():
+    file_path = "/ext/Simple.csv"
+    try:
+        process_cdr_file(file_path)
+        return 'Successfully Updated'
+    except Exception as e:
+        return f'An error occurred while Updating: {str(e)}', 500
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=4000)
