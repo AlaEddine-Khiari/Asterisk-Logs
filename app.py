@@ -41,6 +41,7 @@ def process_cdr_file(file_path):
     conn = connect_to_postgres()
     if conn is not None:
         cursor = conn.cursor()
+        last_one = None
         last_call_start_date = get_last_call_start_date(conn, cursor)
         with open(file_path, 'r') as csvfile:
             cdr_reader = csv.reader(csvfile)
