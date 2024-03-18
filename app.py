@@ -66,14 +66,13 @@ def process_cdr_file(file_path):
                         duration = str(timedelta(seconds=int(duration)))
                         if status == "BUSY":
                             call_recording_data = None
-                            last_one = recording_file_name
                         else:
                             call_recording_data = read_binary_data(recording_file_path)
-                            # Insert Data Into Data Base
-                            cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
-                            insert_cdr(conn, cursor, cdr_data)
-                            last_one = recording_file_name
-                            # Delete the call recording file
+                         # Insert Data Into Data Base
+                        cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
+                        insert_cdr(conn, cursor, cdr_data)
+                        last_one = recording_file_name
+                # Delete the call recording file
                 os.remove(recording_file_path)
         conn.close()
 
