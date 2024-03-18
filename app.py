@@ -46,8 +46,10 @@ def process_cdr_file(file_path):
         with open(file_path, 'r') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
+                raise row
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name
                 timestamp, source, destination, status, billsec, duration, recording_file_name = row
+                raise row
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
                 # Check if billsec is equal to duration
