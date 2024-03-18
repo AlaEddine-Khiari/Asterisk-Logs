@@ -65,16 +65,16 @@ def process_cdr_file(file_path):
                     duration = str(timedelta(seconds=int(duration)))
                     call_recording_data = read_binary_data(recording_file_path)
                  if (recording_file_name != last_one):
-                # Check if call_start date is after the last recorded call_start date
-                last_call_start_date = get_last_call_start_date(conn, cursor)
-                call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
-                if (last_call_start_date is None or call_start_date > last_call_start_date):    
-                    # Insert Data Into Data Base
-                    cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
-                    insert_cdr(conn, cursor, cdr_data)
-                    last_one = recording_file_name
-                # Delete the call recording file
-                os.remove(recording_file_path)
+                    # Check if call_start date is after the last recorded call_start date
+                    last_call_start_date = get_last_call_start_date(conn, cursor)
+                    call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+                    if (last_call_start_date is None or call_start_date > last_call_start_date):    
+                        # Insert Data Into Data Base
+                        cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
+                        insert_cdr(conn, cursor, cdr_data)
+                        last_one = recording_file_name
+                    # Delete the call recording file
+                    os.remove(recording_file_path)
         conn.close()
 
 # Function to get the last recorded call_start date from PostgreSQL
