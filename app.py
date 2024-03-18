@@ -20,6 +20,7 @@ def connect_to_postgres():
         return conn
     except psycopg2.Error as e:
         print("Error connecting to PostgreSQL:", e)
+        raise e
         return None
 
 # Function to insert CDR data into PostgreSQL
@@ -33,6 +34,7 @@ def insert_cdr(conn, cursor, cdr_data):
     except psycopg2.Error as e:
         conn.rollback()
         print("Error inserting CDR data:", e)
+        raise e
 
 # Function to read CSV file and insert data into PostgreSQL
 def process_cdr_file(file_path):
