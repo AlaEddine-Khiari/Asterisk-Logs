@@ -41,8 +41,7 @@ def process_cdr_file(file_path):
     conn = connect_to_postgres()
     if conn is not None:
         cursor = conn.cursor()
-        last_one = None
-        last_call_start_date = None
+        last_call_start_date = get_last_call_start_date(conn, cursor)
         with open(file_path, 'r') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
@@ -59,15 +58,13 @@ def process_cdr_file(file_path):
                 elif int(duration) == 0:
                     status = "Unvailable"
                     call_recording_data = None
-                    os.remove(recording_file_path)
                     duration = "00:00"  # Set duration to 00:00 if billsec equals duration
                 else:
-                    # Convert duration to minutes and seconds format
-                    duration = str(timedelta(seconds=int(duration)))
-                    # Check if call_start date is after the last recorded call_start date
-                    last_call_start_date = get_last_call_start_date(conn, cursor)
                     call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+                    # Check if call_start date is after the last recorded call_start date
                     if (recording_file_name != last_one) and (last_call_start_date is None or call_start_date > last_call_start_date):
+                        # Convert duration to minutes and seconds format
+                        duration = str(timedelta(seconds=int(duration)))
                         call_recording_data = read_binary_data(recording_file_path)
                         # Insert Data Into Data Base
                         cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
