@@ -61,7 +61,7 @@ def process_cdr_file(file_path):
                 else:
                     call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
                     # Check if call_start date is after the last recorded call_start date
-                    if (recording_file_name != last_one) and (last_call_start_date is None or call_start_date >= last_call_start_date):
+                    if (recording_file_name != last_one) and (last_call_start_date is None or call_start_date > last_call_start_date):
                         # Convert duration to minutes and seconds format
                         duration = str(timedelta(seconds=int(duration)))
                         if status == "BUSY":
