@@ -49,10 +49,13 @@ def process_cdr_file(file_path):
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'wav')
                 # Check if billsec is equal to duration
-                if int(billsec) == int(duration):
-                    status = "NO ANSWER"
+                if int(duration) == 0:
+                    status = "Unvailable"
                     call_recording_data = None
                     duration = "00:00"  # Set duration to 00:00 if billsec equals duration
+
+                elif status == "BUSY":
+                    call_recording_data = None
                 else:
                     # Convert duration to minutes and seconds format
                     duration = str(timedelta(seconds=int(duration)))
