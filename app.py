@@ -49,7 +49,7 @@ def process_cdr_file(file_path):
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name
                 timestamp, source, destination, status, billsec, duration, recording_file_name = row
                 # Construct the full file path
-                recording_file_path = os.path.join('/ext/recordings', recording_file_name+'wav')
+                recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
                 # Check if billsec is equal to duration
                 if int(duration) == 0:
                     status = "Unvailable"
