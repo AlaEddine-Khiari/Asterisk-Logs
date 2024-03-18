@@ -52,22 +52,23 @@ def process_cdr_file(file_path):
                 timestamp, source, destination, status, billsec, duration, recording_file_name = row
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
+                
+                if status == "BUSY":
+                    call_recording_data = None
                 # Check if billsec is equal to duration
-                if int(duration) == 0:
+                elif int(duration) == 0:
                     status = "Unvailable"
                     call_recording_data = None
                     duration = "00:00"  # Set duration to 00:00 if billsec equals duration
-
-                elif status == "BUSY":
-                    call_recording_data = None
                 else:
                     # Convert duration to minutes and seconds format
                     duration = str(timedelta(seconds=int(duration)))
                     call_recording_data = read_binary_data(recording_file_path)
+                 if (recording_file_name != last_one):
                 # Check if call_start date is after the last recorded call_start date
                 last_call_start_date = get_last_call_start_date(conn, cursor)
                 call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
-                if (last_call_start_date is None or call_start_date > last_call_start_date) and (recording_file_name != last_one):    
+                if (last_call_start_date is None or call_start_date > last_call_start_date):    
                     # Insert Data Into Data Base
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
