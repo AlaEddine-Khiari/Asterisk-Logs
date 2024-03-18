@@ -61,7 +61,7 @@ def process_cdr_file(file_path):
                 else:
                     call_start_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
                     # Check if call_start date is after the last recorded call_start date
-                    if (recording_file_name != last_one) and (last_call_start_date is None or call_start_date > last_call_start_date):
+                    if (recording_file_name != last_one) and (last_call_start_date is None or call_start_date >= last_call_start_date):
                         # Convert duration to minutes and seconds format
                         duration = str(timedelta(seconds=int(duration)))
                         if status == "BUSY":
@@ -72,8 +72,8 @@ def process_cdr_file(file_path):
                             cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                             insert_cdr(conn, cursor, cdr_data)
                             last_one = recording_file_name
-                        # Delete the call recording file
-                        os.remove(recording_file_path)
+                            # Delete the call recording file
+                            os.remove(recording_file_path)
         conn.close()
 
 # Function to get the last recorded call_start date from PostgreSQL
