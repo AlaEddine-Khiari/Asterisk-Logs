@@ -56,7 +56,7 @@ def process_cdr_file(file_path):
                 if status == "BUSY":
                     call_recording_data = None
                 # Check if billsec is equal to duration
-                elif int(duration) == 0:
+                elif (int(duration) == 0) and (status == "ANSWERED"):
                     status = "Unvailable"
                     call_recording_data = None
                     duration = "00:00"  # Set duration to 00:00 if billsec equals duration
