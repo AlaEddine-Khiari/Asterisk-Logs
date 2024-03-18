@@ -82,6 +82,7 @@ def process_cdr_file(file_path):
                 elif int(duration) == 0:
                     status = "Unvailable"
                     call_recording_data = None
+                    os.remove(recording_file_path)
                     duration = "00:00"  # Set duration to 00:00 if billsec equals duration
                 else:
                     # Convert duration to minutes and seconds format
