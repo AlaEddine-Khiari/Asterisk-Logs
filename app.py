@@ -75,6 +75,7 @@ def process_cdr_file(file_path):
                         last_one = recording_file_name
                     # Delete the call recording file
                     os.remove(recording_file_path)
+        conn.close()
 
 # Function to get the last recorded call_start date from PostgreSQL
 def get_last_call_start_date(conn, cursor):
