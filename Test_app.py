@@ -12,8 +12,8 @@ class TestScript(unittest.TestCase):
         # Create a temporary CSV file
         self.temp_csv_file = os.path.join(self.temp_dir.name, 'test.csv')
         with open(self.temp_csv_file, 'w') as file:
-            file.write("""2024-03-15 10:00:00,200,100,Answer,15,15,test1.
-2024-03-15 10:05:00,100,200,Answer,3,3,test2.
+            file.write("""2024-03-15 10:00:00,200,100,Answer,15,15,test1
+2024-03-15 10:05:00,100,200,Answer,3,3,test2
 """)
 
     def tearDown(self):
