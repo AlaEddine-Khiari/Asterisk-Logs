@@ -4,6 +4,7 @@ import psycopg2
 import os
 import time
 from datetime import timedelta
+from itertools import tee
 
 app = Flask(__name__)
 
@@ -71,7 +72,7 @@ def process_cdr_file(file_path):
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
-                    elif (recording_file_name != next(cdr_reader)[6]) and (status != "ANSWERED"):
+                    elif (recording_file_name != next(peek(cdr_reader))[6]) and (status != "ANSWERED"):
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
@@ -97,6 +98,11 @@ def process_cdr_file(file_path):
         
         conn.close()
 
+# Function allows peeking at the next element in an iterator without consuming it
+def peek(iterator):
+    iterator, peek_iterator = tee(iterator)
+    next(peek_iterator, None)
+    return peek_iterator
 
 # Function to read binary data from a file
 def read_binary_data(file_path):
