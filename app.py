@@ -48,7 +48,8 @@ def process_cdr_file(file_path):
                 if not row:  # Check if the row is empty
                     continue  # Skip
                 if not row[7]:  # Check if the row doesn't have the expected number of elements
-                    timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row + [None]  # Assign None to aux
+                    timestamp, source, destination, status, billsec, duration, recording_file_name = row 
+                    aux = None# Assign None to aux
                 else:
                     timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
                 # Construct the full file path
