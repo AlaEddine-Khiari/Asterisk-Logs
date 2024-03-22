@@ -47,11 +47,8 @@ def process_cdr_file(file_path):
             for row in cdr_reader:
                 if not row:  # Check if the row is empty
                     continue  # Skip
-                if len(row) != 8:  # Check if the row doesn't have the expected number of elements
-                    timestamp, source, destination, status, billsec, duration, recording_file_name = row 
-                    aux = None# Assign None to aux
-                else:
-                    timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
+                # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
+                timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
                 # Convert duration to minutes and seconds format
@@ -67,7 +64,10 @@ def process_cdr_file(file_path):
                 
                 elif len(destination) > 3:
                     last_one = recording_file_name
-                    if (status == "ANSWERED"):
+                    if (not row):
+                        os.remove(recording_file_path)
+                    
+                    elif (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
                         cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
