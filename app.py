@@ -4,7 +4,6 @@ import psycopg2
 import os
 import time
 from datetime import timedelta
-from itertools import tee
 
 app = Flask(__name__)
 
