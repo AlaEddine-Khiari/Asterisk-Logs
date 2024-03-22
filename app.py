@@ -47,7 +47,7 @@ def process_cdr_file(file_path):
             for row in cdr_reader:
                 if not row:  # Check if the row is empty
                     continue  # Skip
-                if not row[7]:  # Check if the row doesn't have the expected number of elements
+                if len(row) != 8:  # Check if the row doesn't have the expected number of elements
                     timestamp, source, destination, status, billsec, duration, recording_file_name = row 
                     aux = None# Assign None to aux
                 else:
