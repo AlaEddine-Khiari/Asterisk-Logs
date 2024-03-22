@@ -12,7 +12,7 @@ class TestScript(unittest.TestCase):
         # Create a temporary CSV file
         self.temp_csv_file = os.path.join(self.temp_dir.name, 'test.csv')
         with open(self.temp_csv_file, 'w') as file:
-            file.write("""2024-03-15 10:00:00,200,39100200,ANSWERED,0,7,test1,
+            file.write("""2024-03-15 10:00:00, <200>,39100200,ANSWERED,0,7,test1,
 2024-03-15 10:05:00,Anwer <2738976>,200,ANSWERED,12,15,test2,SIP/100009
 2024-03-15 10:06:00,imed <>,300,BUSY,0,3,test3,
 2024-03-15 10:07:00,Taysir <100>,300,ANSWERED,7,7,test3,
