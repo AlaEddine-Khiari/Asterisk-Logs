@@ -50,7 +50,7 @@ def process_cdr_file(file_path):
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
                 timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
                 # Delet the row
-                rows.remove(row)
+                cdr_reader.remove(row)
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
                 # Convert duration to minutes and seconds format
