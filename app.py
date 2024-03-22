@@ -56,7 +56,7 @@ def process_cdr_file(file_path):
                 duration = str(timedelta(seconds=int(duration)))
                      
                 # Check if duration is equal to 0 so the destination is unvailable
-                if (int(x) == 0) and (status == "ANSWERED") or (not aux) :
+                if (int(x) == 0 and status == "ANSWERED") or (not aux) :
                     status = "UNVAILABLE"
                     call_recording_data = None
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
