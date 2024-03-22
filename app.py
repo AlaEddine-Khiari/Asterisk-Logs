@@ -79,6 +79,8 @@ def process_cdr_file(file_path):
                         cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
+                    elif (not aux):
+                        os.remove(recording_file_path)
                 else:                   
                     if (recording_file_name != last_one):
                         if status == "BUSY":
