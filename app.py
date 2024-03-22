@@ -62,7 +62,8 @@ def process_cdr_file(file_path):
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                 
-                elif not (destination.isdigit()):
+                elif len(destination) > 3:
+                    last_one = recording_file_name
                     if (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
