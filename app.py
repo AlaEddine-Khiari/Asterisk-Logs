@@ -59,6 +59,7 @@ def process_cdr_file(file_path):
                 if (int(x) == 0 and status == "ANSWERED"):
                     status = "UNVAILABLE"
                     call_recording_data = None
+                    duration = "00:00:00"
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                 
@@ -78,6 +79,7 @@ def process_cdr_file(file_path):
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
+                        duration = "00:00:00"
                         cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
@@ -87,6 +89,7 @@ def process_cdr_file(file_path):
                     if (recording_file_name != last_one):
                         if status == "BUSY":
                             call_recording_data = None
+                            duration = "00:00:00"
                         else:
                             call_recording_data = read_binary_data(recording_file_path)
                          # Insert Data Into Data Base
