@@ -42,7 +42,7 @@ def process_cdr_file(file_path):
     if conn is not None:
         cursor = conn.cursor()
         last_one = None
-        with open(file_path, 'r') as csvfile:
+        with open(file_path, 'r+') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
                 if not row:  # Check if the row is empty
@@ -92,7 +92,8 @@ def process_cdr_file(file_path):
             # Clear the CSV file by rewriting it without processed rows
             csvfile.seek(0)
             csvfile.truncate()
-            csvfile.close()            
+            csvfile.close()
+        
         conn.close()
 
 
