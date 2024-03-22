@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 import tempfile
 import os
-from app import connect_to_postgres, insert_cdr, process_cdr_file, get_last_call_start_date
+from app import connect_to_postgres, insert_cdr, process_cdr_file
 
 class TestScript(unittest.TestCase):
     def setUp(self):
@@ -46,20 +46,6 @@ class TestScript(unittest.TestCase):
 
         # Call the function
         process_cdr_file(self.temp_csv_file)
-
-        # Assertions or further test steps
-
-    @patch('app.connect_to_postgres')
-    def test_get_last_call_start_date(self, mock_connect):
-        # Mock the cursor object
-        mock_cursor = MagicMock()
-        mock_cursor.fetchone.return_value = ['2024-01-01 00:00:00']  # Simulate an existing record
-        mock_conn = MagicMock()
-        mock_conn.cursor.return_value = mock_cursor
-        mock_connect.return_value = mock_conn
-
-        # Call the function
-        last_call_start_date = get_last_call_start_date(mock_conn, mock_cursor)
 
 if __name__ == '__main__':
     unittest.main()
