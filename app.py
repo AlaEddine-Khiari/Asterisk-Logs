@@ -52,10 +52,11 @@ def process_cdr_file(file_path):
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
                 # Convert duration to minutes and seconds format
-                duration = str(timedelta(seconds=int(duration)))    
+                x = duration
+                duration = str(timedelta(seconds=int(duration)))
                      
                 # Check if duration is equal to 0 so the destination is unvailable
-                if (int(duration) == 0) and (status == "ANSWERED"):
+                if (int(x) == 0) and (status == "ANSWERED"):
                     status = "UNVAILABLE"
                     call_recording_data = None
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
