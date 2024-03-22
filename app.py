@@ -72,7 +72,7 @@ def process_cdr_file(file_path):
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
-                    elif (recording_file_name != next(peek(cdr_reader))[6]) and (status != "ANSWERED"):
+                    elif (os.path.exists(recording_file_path)) and (status != "ANSWERED"):
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
