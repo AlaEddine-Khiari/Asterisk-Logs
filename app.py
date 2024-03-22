@@ -102,12 +102,6 @@ def process_cdr_file(file_path):
         
         conn.close()
 
-# Function allows peeking at the next element in an iterator without consuming it
-def peek(iterator):
-    iterator, peek_iterator = tee(iterator)
-    next(peek_iterator, None)
-    return peek_iterator
-
 # Function to read binary data from a file
 def read_binary_data(file_path):
     with open(file_path, 'rb') as file:
