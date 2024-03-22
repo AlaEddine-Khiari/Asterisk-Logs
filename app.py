@@ -56,21 +56,22 @@ def process_cdr_file(file_path):
                 duration = str(timedelta(seconds=int(duration)))
                      
                 # Check if duration is equal to 0 so the destination is unvailable
-                if (int(x) == 0) and (status == "ANSWERED"):
+                if (int(x) == 0) and (status == "ANSWERED") or (not aux) :
                     status = "UNVAILABLE"
                     call_recording_data = None
+                    destination = aux.split("/")[1][:3] 
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                 
                 elif not (destination.isdigit()):
                     if (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
-                        destination= aux.split("/")[1][:3]                         
+                        destination = aux.split("/")[1][:3]                         
                         cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
-                    elif ((recording_file_name != next(cdr_reader)[6]) and (status != "ANSWERED")) or (not aux):
+                    elif (recording_file_name != next(cdr_reader)[6]) and (status != "ANSWERED"):
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
