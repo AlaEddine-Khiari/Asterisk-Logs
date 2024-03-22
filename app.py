@@ -59,7 +59,6 @@ def process_cdr_file(file_path):
                 if (int(x) == 0) and (status == "ANSWERED") or (not aux) :
                     status = "UNVAILABLE"
                     call_recording_data = None
-                    destination = aux.split("/")[1][:3] 
                     cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                 
