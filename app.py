@@ -64,7 +64,7 @@ def process_cdr_file(file_path):
                 
                 elif len(destination) > 3:
                     last_one = recording_file_name
-                    if (not row):
+                    if (not aux):
                         os.remove(recording_file_path)
                     
                     elif (status == "ANSWERED"):
