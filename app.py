@@ -89,10 +89,10 @@ def process_cdr_file(file_path):
                         last_one = recording_file_name
                         # Delete the call recording file
                         os.remove(recording_file_path)
-        # Clear the CSV file by rewriting it without processed rows
-        csvfile.seek(0)
-        csvfile.truncate()
-        csvfile.close()            
+            # Clear the CSV file by rewriting it without processed rows
+            csvfile.seek(0)
+            csvfile.truncate()
+            csvfile.close()            
         conn.close()
 
 
