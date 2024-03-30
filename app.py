@@ -51,16 +51,15 @@ def process_cdr_file(file_path):
                 timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
                 # Construct the full file path
                 recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
-                # Convert duration to minutes and seconds format
-                x = duration
-                duration = str(timedelta(seconds=int(duration)))
+                # Convert billsec to minutes and seconds format
+                x = billsec
+                billsec = str(timedelta(seconds=int(billsec)))
                      
-                # Check if duration is equal to 0 so the destination is unvailable
+                # Check if billsec is equal to 0 so the destination is unvailable
                 if (int(x) == 0 and status == "ANSWERED"):
                     status = "UNVAILABLE"
                     call_recording_data = None
-                    duration = "00:00:00"
-                    cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
+                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                 
                 elif len(source.split('<')[1].split('>')[0]) > 3:
@@ -71,7 +70,7 @@ def process_cdr_file(file_path):
                     elif (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
-                        cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
+                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
@@ -79,8 +78,7 @@ def process_cdr_file(file_path):
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
-                        duration = "00:00:00"
-                        cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
+                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                     elif (aux == None):
@@ -89,11 +87,11 @@ def process_cdr_file(file_path):
                     if (recording_file_name != last_one):
                         if status == "BUSY":
                             call_recording_data = None
-                            duration = "00:00:00"
+
                         else:
                             call_recording_data = read_binary_data(recording_file_path)
                          # Insert Data Into Data Base
-                        cdr_data = (timestamp, source, destination, status, duration, call_recording_data)
+                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         last_one = recording_file_name
                         # Delete the call recording file
