@@ -63,7 +63,7 @@ def process_cdr_file(file_path):
                     insert_cdr(conn, cursor, cdr_data)
                     last_one = recording_file_name
                 
-                elif len(source.split('<')[1].split('>')[0]) > 3 and recording_file_name != last_one:
+                elif len(source.split('<')[1].split('>')[0]) > 3 :
                     last_one = recording_file_name
                     if (not aux):
                         os.remove(recording_file_path)
@@ -86,7 +86,7 @@ def process_cdr_file(file_path):
                         os.remove(recording_file_path)
                 else:                   
                     if (recording_file_name != last_one):
-                        if status == "BUSY":
+                        if status == "BUSY" or status == "NO ANSWER":
                             call_recording_data = None
 
                         else:
