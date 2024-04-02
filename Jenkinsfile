@@ -25,7 +25,7 @@ pipeline {
                     sh 'python3 -m unittest discover -s . -p "Test_app.py"'
                     // Run SonarQube Scanner
                     withSonarQubeEnv('SonarQubeServer') {
-                        sh 'sonar-scanner'
+                        sh 'sonar-scanner -x'
                     }
                 }
             }
