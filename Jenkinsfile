@@ -1,6 +1,10 @@
 pipeline {
     agent any
-
+    
+    environment {
+        PATH = "/usr/lib/jvm/java-17-openjdk-amd64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/vagrant/sonar-scanner-cli-4.6.2.2472-linux/bin:/home/vagrant/sonar-scanner-4.6.2.2472-linux/bin"
+    }
+    
     stages {
         stage('Getting project from Git') {
             steps {
@@ -19,10 +23,17 @@ pipeline {
                     sh "dd if=/dev/urandom of=/ext/recordings/test2.wav bs=1024 count=1024"
                     sh "dd if=/dev/urandom of=/ext/recordings/test3.wav bs=1024 count=1024"
                     // Run unit tests
-                    sh 'python3 -m unittest discover -s . -p "Test_app.py"'
-                    // Run SonarQube Scanner
-                    withSonarQubeEnv('SonarQubeServer') {
-                        sh 'sonar-scanner -X'
+                    sh 'python3 -m unittest -p "Test_app.py"'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQubeScanner'
+                    withEnv(["PATH+SONARQUBE_SCANNER=${scannerHome}/bin"]) {
+                        sh 'sonar-scanner'
                     }
                 }
             }
