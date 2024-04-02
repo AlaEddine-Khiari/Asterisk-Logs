@@ -23,6 +23,7 @@ pipeline {
                     // Run SonarQube Scanner
                     withSonarQubeEnv('SonarQubeServer') {
                         sh 'sonar-scanner'
+                    }
                 }
             }
         }
