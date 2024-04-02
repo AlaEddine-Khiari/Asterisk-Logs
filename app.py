@@ -56,13 +56,14 @@ def process_cdr_file(file_path):
                 billsec = str(timedelta(seconds=int(billsec)))
                      
                 # Check if billsec is equal to 0 so the destination is unvailable
-                if (int(x) == 0 and status == "ANSWERED"):
+                if (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
                     call_recording_data = None
                     cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
+                    last_one = recording_file_name
                 
-                elif len(source.split('<')[1].split('>')[0]) > 3:
+                elif len(source.split('<')[1].split('>')[0]) > 3 and recording_file_name != last_one:
                     last_one = recording_file_name
                     if (not aux):
                         os.remove(recording_file_path)
