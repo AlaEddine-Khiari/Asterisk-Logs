@@ -18,7 +18,11 @@ pipeline {
                     sh "dd if=/dev/urandom of=/ext/recordings/test1.wav bs=1024 count=1024"
                     sh "dd if=/dev/urandom of=/ext/recordings/test2.wav bs=1024 count=1024"
                     sh "dd if=/dev/urandom of=/ext/recordings/test3.wav bs=1024 count=1024"
-                    sh "python3 -m unittest Test_app.py"
+                    // Run unit tests
+                    sh 'python -m unittest discover -s tests -p "Test_app.py"'
+                    // Run SonarQube Scanner
+                    withSonarQubeEnv('SonarQubeServer') {
+                        sh 'sonar-scanner'
                 }
             }
         }
