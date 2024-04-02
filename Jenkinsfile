@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        PATH = "/usr/lib/jvm/java-17-openjdk-amd64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/vagrant/sonar-scanner-cli-4.6.2.2472-linux/bin:/home/vagrant/sonar-scanner-4.6.2.2472-linux/bin"
-    }
 
     stages {
         stage('Getting project from Git') {
