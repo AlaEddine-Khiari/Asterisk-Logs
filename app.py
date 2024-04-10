@@ -54,9 +54,12 @@ def process_cdr_file(file_path):
                 # Convert billsec to minutes and seconds format
                 x = billsec
                 billsec = str(timedelta(seconds=int(billsec)))
-                     
+                
+                # Check if calling Voice Mail
+                if ("Voice Mail" in source)
+                     continue
                 # Check if billsec is equal to 0 so the destination is unvailable
-                if (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
+                elif (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
                     call_recording_data = None
                     cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
