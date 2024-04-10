@@ -56,8 +56,8 @@ def process_cdr_file(file_path):
                 billsec = str(timedelta(seconds=int(billsec)))
                 
                 # Check if calling Voice Mail
-                if ("Voice Mail" in source)
-                     continue
+                if "Voice Mail" in source:
+                    continue # Skip
                 # Check if billsec is equal to 0 so the destination is unvailable
                 elif (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
