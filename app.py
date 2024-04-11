@@ -45,7 +45,7 @@ def process_cdr_file(file_path):
         with open(file_path, 'r+') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
-                if not row:  # Check if the row is empty or 
+                if not row:  # Check if the row is empty
                     continue  # Skip
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
                 timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
@@ -54,7 +54,7 @@ def process_cdr_file(file_path):
                 # Convert billsec to minutes and seconds format
                 x = billsec
                 billsec = str(timedelta(seconds=int(billsec)))
-                
+                     
                 # Check if billsec is equal to 0 so the destination is unvailable
                 if (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
@@ -67,6 +67,7 @@ def process_cdr_file(file_path):
                     last_one = recording_file_name
                     if (not aux):
                         os.remove(recording_file_path)
+                    
                     elif (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
@@ -81,23 +82,20 @@ def process_cdr_file(file_path):
                         cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
-                        
-                elif (recording_file_name != last_one):                   
+                
+                elif (recording_file_name != last_one):
                     if status == "BUSY" or status == "NO ANSWER":
                         call_recording_data = None
-                        os.remove(recording_file_path)
-                    elif x == duration and status == "ANSWERED":
-                        call_recording_data = None
-                        status = "BUSY"
+
                     else:
                         call_recording_data = read_binary_data(recording_file_path)
-                        os.remove(recording_file_path)
-                    # Insert Data Into Data Base
+                     # Insert Data Into Data Base
                     cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                     last_one = recording_file_name
-                else:
-                        continue
+                    # Delete the call recording file
+                    os.remove(recording_file_path)
+            
             # Clear the CSV file by rewriting it without processed rows
             csvfile.seek(0)
             csvfile.truncate()
