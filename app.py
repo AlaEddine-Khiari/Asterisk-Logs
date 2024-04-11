@@ -66,17 +66,15 @@ def process_cdr_file(file_path):
                 
                 elif len(source.split('<')[1].split('>')[0]) > 3 :
                     last_one = recording_file_name
-                    if (not aux):
-                        os.remove(recording_file_path)
                     
-                    elif (status == "ANSWERED"):
+                    if (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
                         cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
-                    elif os.path.exists(recording_file_path) :
+                    elif (os.path.exists(recording_file_path)) :
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
@@ -85,7 +83,8 @@ def process_cdr_file(file_path):
                         os.remove(recording_file_path)
                 
                 elif (recording_file_name != last_one):
-                    if status != "ANSWERED":
+                    
+                    if (status != "ANSWERED"):
                         call_recording_data = None
 
                     else:
