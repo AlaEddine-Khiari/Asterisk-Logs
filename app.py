@@ -45,7 +45,7 @@ def process_cdr_file(file_path):
         with open(file_path, 'r+') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
-                if not row:  # Check if the row is empty
+                if not row or "*" in destination:  # Check if the row is empty or calling Voice mail
                     continue  # Skip
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
                 timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
@@ -55,9 +55,6 @@ def process_cdr_file(file_path):
                 x = billsec
                 billsec = str(timedelta(seconds=int(billsec)))
                 
-                # Check if calling Voice Mail
-                if "*" in destination:
-                    continue # Skip
                 # Check if billsec is equal to 0 so the destination is unvailable
                 elif (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
@@ -70,7 +67,6 @@ def process_cdr_file(file_path):
                     last_one = recording_file_name
                     if (not aux):
                         os.remove(recording_file_path)
-                    
                     elif (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
@@ -84,8 +80,6 @@ def process_cdr_file(file_path):
                         destination = "No One"
                         cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
-                        os.remove(recording_file_path)
-                    elif (aux == None):
                         os.remove(recording_file_path)
                 else:                   
                     if (recording_file_name != last_one):
