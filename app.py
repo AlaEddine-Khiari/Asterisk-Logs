@@ -56,7 +56,7 @@ def process_cdr_file(file_path):
                 billsec = str(timedelta(seconds=int(billsec)))
                 
                 # Check if billsec is equal to 0 so the destination is unvailable
-                elif (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
+                if (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
                     call_recording_data = None
                     cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
