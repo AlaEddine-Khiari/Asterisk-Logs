@@ -76,7 +76,7 @@ def process_cdr_file(file_path):
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
-                    elif (os.path.exists(recording_file_path)) and (status != "ANSWERED"):
+                    elif os.path.exists(recording_file_path) :
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
@@ -85,7 +85,7 @@ def process_cdr_file(file_path):
                         os.remove(recording_file_path)
                 
                 elif (recording_file_name != last_one):
-                    if status == "BUSY" or status == "NO ANSWER":
+                    if status != "ANSWERED":
                         call_recording_data = None
 
                     else:
