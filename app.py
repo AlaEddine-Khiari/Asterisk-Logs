@@ -83,7 +83,7 @@ def process_cdr_file(file_path):
                 elif (recording_file_name != last_one):                   
                     if status == "BUSY" or status == "NO ANSWER":
                         call_recording_data = None
-                         os.remove(recording_file_path)
+                        os.remove(recording_file_path)
                     elif x == duration and status == "ANSWERED":
                         call_recording_data = None
                         status = "BUSY"
