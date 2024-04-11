@@ -91,15 +91,17 @@ def process_cdr_file(file_path):
                     if (recording_file_name != last_one):
                         if status == "BUSY" or status == "NO ANSWER":
                             call_recording_data = None
-
+                             os.remove(recording_file_path)
+                        elif x == duration and status == "ANSWERED":
+                            call_recording_data = None
+                            status = "BUSY"
                         else:
                             call_recording_data = read_binary_data(recording_file_path)
+                             os.remove(recording_file_path)
                          # Insert Data Into Data Base
                         cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                         insert_cdr(conn, cursor, cdr_data)
                         last_one = recording_file_name
-                        # Delete the call recording file
-                        os.remove(recording_file_path)
             # Clear the CSV file by rewriting it without processed rows
             csvfile.seek(0)
             csvfile.truncate()
