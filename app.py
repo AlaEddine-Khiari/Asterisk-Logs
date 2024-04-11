@@ -45,7 +45,7 @@ def process_cdr_file(file_path):
         with open(file_path, 'r+') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
-                if (not row) or "*" in destination:  # Check if the row is empty or calling voice mail
+                if (not row) or ("*" in row[3]):  # Check if the row is empty or calling voice mail
                     continue  # Skip
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
                 timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
