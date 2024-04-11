@@ -45,7 +45,7 @@ def process_cdr_file(file_path):
         with open(file_path, 'r+') as csvfile:
             cdr_reader = csv.reader(csvfile)
             for row in cdr_reader:
-                if not row:  # Check if the row is empty
+                if (not row) or "*" in destination:  # Check if the row is empty or calling voice mail
                     continue  # Skip
                 # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
                 timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
@@ -54,7 +54,8 @@ def process_cdr_file(file_path):
                 # Convert billsec to minutes and seconds format
                 x = billsec
                 billsec = str(timedelta(seconds=int(billsec)))
-                     
+                 
+                
                 # Check if billsec is equal to 0 so the destination is unvailable
                 if (int(x) == 0 and status == "ANSWERED" and recording_file_name != last_one):
                     status = "UNVAILABLE"
@@ -89,7 +90,7 @@ def process_cdr_file(file_path):
 
                     else:
                         call_recording_data = read_binary_data(recording_file_path)
-                     # Insert Data Into Data Base
+                    # Insert Data Into Data Base
                     cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
                     insert_cdr(conn, cursor, cdr_data)
                     last_one = recording_file_name
