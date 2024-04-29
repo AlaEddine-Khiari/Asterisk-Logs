@@ -28,7 +28,7 @@ def insert_cdr(conn, cursor, cdr_data):
     try:
         cursor.execute("""
             INSERT INTO cdr_log (timestamp, source, destination, status, duration, call_recording, length)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, cdr_data)
         conn.commit()
     except psycopg2.Error as e:
