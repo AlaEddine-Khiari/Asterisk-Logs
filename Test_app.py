@@ -36,7 +36,8 @@ class TestScript(unittest.TestCase):
         mock_connect.assert_called_once()
 
     @patch('app.connect_to_postgres')
-    def test_process_cdr_file(self, mock_connect):
+    @patch('app.insert_cdr')
+    def test_process_cdr_file(self, mock_insert_cdr, mock_connect):
         # Mock the cursor object
         mock_cursor = MagicMock()
         mock_cursor.fetchone.return_value = [None]  # Simulate no existing records
@@ -46,6 +47,9 @@ class TestScript(unittest.TestCase):
 
         # Call the function
         process_cdr_file(self.temp_csv_file)
+
+        # Assertions
+        mock_insert_cdr.assert_called()  # Check that insert_cdr was called
 
 if __name__ == '__main__':
     unittest.main()
