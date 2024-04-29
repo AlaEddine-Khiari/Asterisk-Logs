@@ -26,15 +26,10 @@ def connect_to_postgres():
 # Function to insert CDR data into PostgreSQL
 def insert_cdr(conn, cursor, cdr_data):
     try:
-        # Unpack cdr_data
-        timestamp, source, destination, status, duration, call_recording_data = cdr_data
-        # Calculate the length of the destination
-        destination_length = len(destination)
-        # Execute the SQL query with the calculated length
         cursor.execute("""
             INSERT INTO cdr_log (timestamp, source, destination, status, duration, call_recording, length)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (timestamp, source, destination, status, duration, call_recording_data, destination_length))
+            VALUES (%s, %s, %s, %s, %s, %s, CHAR_LENGTH(%s))
+        """, cdr_data + (cdr_data[2],))  # cdr_data[2] is the destination
         conn.commit()
     except psycopg2.Error as e:
         conn.rollback()
