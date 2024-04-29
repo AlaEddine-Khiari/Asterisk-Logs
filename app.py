@@ -28,8 +28,8 @@ def insert_cdr(conn, cursor, cdr_data):
     try:
         cursor.execute("""
             INSERT INTO cdr_log (timestamp, source, destination, status, duration, call_recording, length)
-            VALUES (%s, %s, %s, %s, %s, %s, CHAR_LENGTH(%s))
-        """, cdr_data + (cdr_data[2],))  # cdr_data[2] is the destination
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """, cdr_data + (len(cdr_data[2]),))  # cdr_data[2] is the destination
         conn.commit()
     except psycopg2.Error as e:
         conn.rollback()
