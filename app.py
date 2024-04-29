@@ -36,6 +36,57 @@ def insert_cdr(conn, cursor, cdr_data):
         print("Error inserting CDR data:", e)
         raise e
 
+# Function to process a row of CDR data
+def process_cdr_row(row, last_one, conn, cursor):
+    timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
+    # Construct the full file path
+    recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
+    # Convert billsec to minutes and seconds format
+    x = billsec
+    billsec = str(timedelta(seconds=int(billsec)))
+
+    # Check if billsec is equal to 0 so the destination is unvailable
+    if (int(x) == 0 and status == "ANSWERED"):
+        status = "UNVAILABLE"
+        call_recording_data = None
+        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+        insert_cdr(conn, cursor, cdr_data)
+        last_one = recording_file_name
+
+    elif len(source.split('<')[1].split('>')[0]) > 3 :
+        last_one = recording_file_name
+
+        if (status == "ANSWERED"):
+            call_recording_data = read_binary_data(recording_file_path) 
+            destination = aux.split("/")[1][:3]                         
+            cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+            insert_cdr(conn, cursor, cdr_data)
+            os.remove(recording_file_path)
+
+        elif (os.path.exists(recording_file_path)) :
+            call_recording_data = None
+            status = "NO ANSWER"
+            destination = "No One"
+            cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+            insert_cdr(conn, cursor, cdr_data)
+            os.remove(recording_file_path)
+
+    elif (recording_file_name != last_one):
+
+        if (status != "ANSWERED"):
+            call_recording_data = None
+
+        else:
+            call_recording_data = read_binary_data(recording_file_path)
+        # Insert Data Into Data Base
+        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+        insert_cdr(conn, cursor, cdr_data)
+        last_one = recording_file_name
+        # Delete the call recording file
+        os.remove(recording_file_path)
+
+    return last_one
+
 # Function to read CSV file and insert data into PostgreSQL
 def process_cdr_file(file_path):
     conn = connect_to_postgres()
@@ -47,60 +98,13 @@ def process_cdr_file(file_path):
             for row in cdr_reader:
                 if (not row) or ("*" in row[2]):  # Check if the row is empty or calling voice mail
                     continue  # Skip
-                # Assuming the structure of CSV file: timestamp, source, destination, status, billsec, duration, recording_file_name, aux: for Knowing The person Who answer For Incoming
-                timestamp, source, destination, status, billsec, duration, recording_file_name, aux = row
-                # Construct the full file path
-                recording_file_path = os.path.join('/ext/recordings', recording_file_name+'.wav')
-                # Convert billsec to minutes and seconds format
-                x = billsec
-                billsec = str(timedelta(seconds=int(billsec)))
-                 
-                
-                # Check if billsec is equal to 0 so the destination is unvailable
-                if (int(x) == 0 and status == "ANSWERED"):
-                    status = "UNVAILABLE"
-                    call_recording_data = None
-                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
-                    insert_cdr(conn, cursor, cdr_data)
-                    last_one = recording_file_name
-                
-                elif len(source.split('<')[1].split('>')[0]) > 3 :
-                    last_one = recording_file_name
-                    
-                    if (status == "ANSWERED"):
-                        call_recording_data = read_binary_data(recording_file_path) 
-                        destination = aux.split("/")[1][:3]                         
-                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
-                        insert_cdr(conn, cursor, cdr_data)
-                        os.remove(recording_file_path)
-                                    
-                    elif (os.path.exists(recording_file_path)) :
-                        call_recording_data = None
-                        status = "NO ANSWER"
-                        destination = "No One"
-                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
-                        insert_cdr(conn, cursor, cdr_data)
-                        os.remove(recording_file_path)
-                
-                elif (recording_file_name != last_one):
-                    
-                    if (status != "ANSWERED"):
-                        call_recording_data = None
+                last_one = process_cdr_row(row, last_one, conn, cursor)
 
-                    else:
-                        call_recording_data = read_binary_data(recording_file_path)
-                    # Insert Data Into Data Base
-                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
-                    insert_cdr(conn, cursor, cdr_data)
-                    last_one = recording_file_name
-                    # Delete the call recording file
-                    os.remove(recording_file_path)
-            
             # Clear the CSV file by rewriting it without processed rows
             csvfile.seek(0)
             csvfile.truncate()
             csvfile.close()
-        
+
         conn.close()
 
 # Function to read binary data from a file
