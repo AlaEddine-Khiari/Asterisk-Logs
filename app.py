@@ -27,7 +27,7 @@ def connect_to_postgres():
 def insert_cdr(conn, cursor, cdr_data):
     try:
         cursor.execute("""
-            INSERT INTO cdr_log (timestamp, source, destination, status, duration, call_recording)
+            INSERT INTO cdr_log (timestamp, source, destination, status, duration, call_recording, length)
             VALUES (%s, %s, %s, %s, %s, %s)
         """, cdr_data)
         conn.commit()
@@ -60,7 +60,7 @@ def process_cdr_file(file_path):
                 if (int(x) == 0 and status == "ANSWERED"):
                     status = "UNVAILABLE"
                     call_recording_data = None
-                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data, len(destination))
                     insert_cdr(conn, cursor, cdr_data)
                     last_one = recording_file_name
                 
@@ -70,7 +70,7 @@ def process_cdr_file(file_path):
                     if (status == "ANSWERED"):
                         call_recording_data = read_binary_data(recording_file_path) 
                         destination = aux.split("/")[1][:3]                         
-                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data, len(destination))
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                                     
@@ -78,7 +78,7 @@ def process_cdr_file(file_path):
                         call_recording_data = None
                         status = "NO ANSWER"
                         destination = "No One"
-                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+                        cdr_data = (timestamp, source, destination, status, billsec, call_recording_data, len(destination))
                         insert_cdr(conn, cursor, cdr_data)
                         os.remove(recording_file_path)
                 
@@ -90,7 +90,7 @@ def process_cdr_file(file_path):
                     else:
                         call_recording_data = read_binary_data(recording_file_path)
                     # Insert Data Into Data Base
-                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
+                    cdr_data = (timestamp, source, destination, status, billsec, call_recording_data, len(destination))
                     insert_cdr(conn, cursor, cdr_data)
                     last_one = recording_file_name
                     # Delete the call recording file
