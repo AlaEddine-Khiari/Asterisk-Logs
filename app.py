@@ -57,8 +57,12 @@ def process_cdr_row(row, last_one, conn, cursor):
         last_one = recording_file_name
 
         if (status == "ANSWERED"):
-            call_recording_data = read_binary_data(recording_file_path) 
-            destination = aux.split("/")[1][:3]                         
+            if not aux:
+                call_recording_data = None
+                destination = "off"
+            else:
+                call_recording_data = read_binary_data(recording_file_path) 
+                destination = aux.split("/")[1][:3]                         
             cdr_data = (timestamp, source, destination, status, billsec, call_recording_data)
             insert_cdr(conn, cursor, cdr_data)
             os.remove(recording_file_path)
