@@ -57,7 +57,7 @@ def process_cdr_row(row, last_one, conn, cursor):
         last_one = recording_file_name
 
         if (status == "ANSWERED"):
-            if not aux:
+            if aux=="":
                 call_recording_data = None
                 destination = "off"
             else:
