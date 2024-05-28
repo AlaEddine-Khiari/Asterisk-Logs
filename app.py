@@ -58,8 +58,9 @@ def process_cdr_row(row, last_one, conn, cursor):
 
         if (status == "ANSWERED"):
             if not aux or aux=="":
+                status = "NO ANSWER"
+                destination = "All Off"
                 call_recording_data = None
-                destination = "off"
             else:
                 call_recording_data = read_binary_data(recording_file_path) 
                 destination = aux.split("/")[1][:3]
